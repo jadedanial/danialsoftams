@@ -1,0 +1,183 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Asset Management System</title>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="shortcut icon" type="image/png" href="{% static 'ams/images/logo.png' %}">
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="{% static 'ams/css/style.css' %}">
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/linways/table-to-excel@v1.0.4/dist/tableToExcel.js"></script>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script type="text/javascript" src="{% static 'ams/js/script.js' %}"></script>
+    </head>
+    <body class="active">
+        <div class="wrapper">
+            <div class="section">
+                <div class="top-navbar">
+                    <div id="chevron-menu">
+                        <a href="#">
+                            <i class="fas fa-chevron-right" id="chevleft"></i>
+                        </a>
+                    </div>
+                    <div id="app-logo">
+                        <img src="{% static 'ams/images/danialsoftlogo.png' %}">
+                    </div>
+                    <div class="user-nav">
+                        {% if user.is_authenticated %}
+                            <script>authVal = 1;</script>
+                            <a href="{% url 'logout' %}">LOGOUT</a>
+                            <style>#chevron-menu{display: none;}#app-logo{display: inline-flex;}</style>
+                        {% else %}
+                            <script>authVal = 0;</script>
+                            <a href="{% url 'login' %}">LOGIN</a>
+                            <style>#chevron-menu{display: none;}#app-logo{display: inline-flex;}</style>
+                        {% endif %}
+                        <p>&nbsp;&nbsp;&nbsp;Hello, {{ user.username|default:'Guest' }}&nbsp;&nbsp;&nbsp;<i class="fas fa-user"></i></p>
+                    </div>
+                </div>
+            </div>
+            <div class="sidebar">
+                <div class="profile">
+                    <a href="{% url 'home' %}"><img src="{% static 'ams/images/danialsoftlogo.png' %}" style="width: 160px;"></a>
+                    <p>Asset Maintenance System</p>
+                </div>
+                <ul>
+                    {% block sectionbuton %}
+                        {% for section in sections %}
+                            <li>
+                                <button class="menu-button"><span><i class="{{ section.sec_icon }}"></i>&nbsp;&nbsp;&nbsp;{{ section.sec_name }}</span></button>
+                                <div class="dropdown-container">
+                                    {% for module in section.sec_mod.all %}
+                                        <a href="{% url 'module' category=module.mod_url %}"><i class="fa fa-chevron-right"></i>&nbsp;&nbsp;&nbsp;{{ module.mod_name }}</a>
+                                    {% endfor %}
+                                </div>
+                            </li>
+                        {% endfor %}
+                    {% endblock sectionbuton %}
+                </ul>
+            </div>
+        </div>
+        <div class="main-container">
+            {% block sectionmenu %}
+                {% for section in sections %}
+                    <div id="menu-{{ section.sec_name|lower }}">
+                        <div class="menu-header">
+                            <p>{{ section.sec_name }}</p>
+                        </div>
+                        <div class="menu-cards">
+                            {% for module in section.sec_mod.all %}
+                                <div class="menu-card">
+                                    <a href="{% url 'module' category=module.mod_url %}" style="text-decoration: none;">
+                                        <div>
+                                            <h2>{{ module.mod_name }}</h2>
+                                            <p>
+                                                You can select this text even though the whole card is clickable.
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endblock sectionmenu %}
+            {% block content %}
+			{% endblock %}
+        </div>
+        <style>
+
+            #chevron-menu a{
+                font-size: 30px;
+            }
+
+            #app-logo img{
+                width: 110px;
+            }
+
+            .user-nav a{
+                font-family: raleway;
+                text-decoration: none;
+            }
+
+            .dropdown-container a{
+                text-decoration: none;
+            }
+
+            .borderless-input{
+                outline: none !important;
+                box-shadow: none !important;
+                border-style: none !important;
+            }
+
+            .page-link{
+                border: 0 !important;
+                border-radius: 0 !important;
+            }
+
+            .page-link:focus{
+                box-shadow: none !important;
+            }
+
+            .page-link:hover{
+                color: #ffffff;
+                background-color: #a676f1 !important;
+            }
+
+        </style>
+        <script type="text/javascript">
+
+            //Chevron toggle
+            var chevronmenu = document.querySelector("#chevron-menu");
+
+            chevronmenu.addEventListener("click", function(){
+
+                document.querySelector("body").classList.toggle("active");
+                var checkactive =  document.querySelector("body");
+                if(checkactive.classList.contains("active")){
+                    document.getElementById("chevleft").className = "fas fa-chevron-right";
+                }else{
+                    document.getElementById("chevleft").className = "fas fa-chevron-left";
+                }
+            
+            })
+            
+            //Dropdown toggle
+            var dropdown = document.getElementsByClassName("menu-button");
+            var i;
+
+            for (i = 0; i < dropdown.length; i++){
+
+                dropdown[i].addEventListener("click", function(){
+                    this.classList.toggle("active");
+                    var dropdownContent = this.nextElementSibling;
+                    if(dropdownContent.style.display === "block"){
+                        dropdownContent.style.display = "none";
+                    }else{
+                        dropdownContent.style.display = "block";
+                    }
+                });
+
+            }
+
+            //Check authentication
+            function checkAuthentication(authval, menuval){
+
+                if(authval === 1){
+                    document.getElementById("chevron-menu").style.display = "inline-flex";
+                    document.getElementById("app-logo").style.display = "none";
+                    document.getElementById("menu-home").style.display = "none";
+                    showMenu(menuval)
+                }else if(authval === 0){
+                    location.href = "{% url 'login' %}";
+                }
+
+            }
+    
+        </script>
+    </body>
+</html>

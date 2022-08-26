@@ -1,0 +1,50 @@
+{% extends "index.html" %}
+{% block content %}
+    <div id="menu-home">
+        <div class="d-flex justify-content-center" id="menu-title"><p>Asset Maintenance System</p></div>
+        <div class="d-flex justify-content-center">
+            <table>
+                <tr>
+                    <th><p><i class="fa fa-check"></i>&nbsp;&nbsp;&nbsp;Preventive & Corrective Maintenance Scheduling</p></th>
+                    <th><p><i class="fa fa-check"></i>&nbsp;&nbsp;&nbsp;Spare Parts Inventory</p></th>
+                </tr>
+                <tr>
+                    <th><p><i class="fa fa-check"></i>&nbsp;&nbsp;&nbsp;Reduce downtime and repair costs</p></th>                    
+                    <th><p><i class="fa fa-check"></i>&nbsp;&nbsp;&nbsp;Manage work orders for efficiency</p></th>
+                </tr>
+            </table>
+        </div>
+        <div class="d-flex justify-content-center">
+            <div class="button-container">
+                <a href="javascript:checkAuthentication(authVal, 2)" class="card" style="border-radius: 0;">
+                    <p><i class="fa fa-gear card-icon"></i></p>
+                    <p class="card-title">MAINTENANCE</p>
+                </a>
+            </div>
+            <div class="button-container">
+                <a href="javascript:checkAuthentication(authVal, 3)" class="card" style="border-radius: 0;">
+                    <p><i class="fa fa-calendar card-icon"></i></p>
+                    <p class="card-title">ADMINISTRATION</p>
+                </a>
+            </div>
+            <div class="button-container">
+                <a href="javascript:checkAuthentication(authVal, 4)" class="card" style="border-radius: 0;">
+                    <p><i class="fa fa-line-chart card-icon"></i></p>
+                    <p class="card-title">REPORTS</p>
+                </a>
+            </div>
+            <div class="button-container">
+                <a href="javascript:checkAuthentication(authVal, 5)" class="card" style="border-radius: 0;">
+                    <p><i class="fa fa-cube card-icon"></i></p>
+                    <p class="card-title">INVENTORY</p>
+                </a>
+            </div>
+            <div class="button-container">
+                <a href="javascript:checkAuthentication(authVal, 6)" class="card" style="border-radius: 0;">
+                    <p><i class="fa fa-bus card-icon"></i></p>
+                    <p class="card-title">ASSETS</p>
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

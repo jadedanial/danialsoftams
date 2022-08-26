@@ -1,0 +1,1 @@
+web: gunicorn DanialSoftAMS.wsgi --log-file -
