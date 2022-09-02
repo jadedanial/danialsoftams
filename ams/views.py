@@ -55,7 +55,7 @@ def module(request, category):
     
     elif category == "attendance":
 
-        attendance_list = Attendance.objects.select_related('emp_id')
+        attendance_list = Attendance.objects.select_related('emp_id').order_by('-attend_date')
         page = request.GET.get('page', 1)
         paginator = Paginator(attendance_list, 31)
 
@@ -77,14 +77,8 @@ def module(request, category):
             'attend_shiftto': '',
         }]
 
-        context = {
-            'selections': Selection.objects.all(),
-            'parameters': Parameter.objects.all(),
-            'modules': Module.objects.all(),
-            'sections': Section.objects.all(),
-            'attendances': attendances,
-            'employeesearch': employeeSearch,
-        }
+        if "attendances" not in context: context["attendances"] = attendances
+        if "employeesearch" not in context: context["employeesearch"] = employeeSearch
 
         if request.method == 'POST':
 
@@ -122,51 +116,67 @@ def module(request, category):
                         attendShiftto = request.POST['shift-to-input']
 
                         if employeeExist:
+                            
+                            if attendDate != "" and attendDate != "mm/dd/yyyy":
 
-                            if attendedToday:
+                                if attendedToday:
 
-                                attendedToday.update(
-                                    attend_timein = attendTimein,
-                                    attend_timeout = attendTimeout,
-                                    attend_status = attendStatus,
-                                    attend_shiftfrom = attendShiftfrom,
-                                    attend_shiftto = attendShiftto,
-                                )
+                                    attendedToday.update(
+                                        attend_timein = attendTimein,
+                                        attend_timeout = attendTimeout,
+                                        attend_status = attendStatus,
+                                        attend_shiftfrom = attendShiftfrom,
+                                        attend_shiftto = attendShiftto,
+                                    )
+                                    
+                                    messages.info(request, "Employee ID " + str(empID) + " successfully updated.")
                                 
-                                messages.info(request, "Employee ID " + str(empID) + " successfully updated.")
+                                else:
+                                    
+                                    attendance = Attendance(
+                                        emp_id = Employee.objects.get(emp_id = empID),
+                                        attend_date = attendDate,
+                                        attend_timein = attendTimein,
+                                        attend_timeout = attendTimeout,
+                                        attend_status = attendStatus,
+                                        attend_shiftfrom = attendShiftfrom,
+                                        attend_shiftto = attendShiftto,
+                                    )
+                                    
+                                    attendance.save()
+                                    messages.info(request, "Employee ID " + str(empID) + " successfully saved.")
+                                
+                                context["employeesearch"] = [{
+                                    'id': '',
+                                    'emp_id': empID,
+                                    'attend_date': attendDate,
+                                    'attend_timein': attendTimein,
+                                    'attend_timeout': attendTimeout,
+                                    'attend_status': attendStatus,
+                                    'attend_shiftfrom': attendShiftfrom,
+                                    'attend_shiftto': attendShiftto,
+                                }]
                             
                             else:
-                                
-                                attendance = Attendance(
-                                    emp_id = Employee.objects.get(emp_id = empID),
-                                    attend_date = attendDate,
-                                    attend_timein = attendTimein,
-                                    attend_timeout = attendTimeout,
-                                    attend_status = attendStatus,
-                                    attend_shiftfrom = attendShiftfrom,
-                                    attend_shiftto = attendShiftto,
-                                )
-                                
-                                attendance.save()
-                                messages.info(request, "Employee ID " + str(empID) + " successfully saved.")
-                            
-                            context["employeesearch"] = [{
-                                'id': '',
-                                'emp_id': empID,
-                                'attend_date': attendDate,
-                                'attend_timein': attendTimein,
-                                'attend_timeout': attendTimeout,
-                                'attend_status': attendStatus,
-                                'attend_shiftfrom': attendShiftfrom,
-                                'attend_shiftto': attendShiftto,
-                            }]
+                                    
+                                messages.info(request, "Please choose Attendance date.")
+                                context["employeesearch"] = [{
+                                    'id': '',
+                                    'emp_id': empID,
+                                    'attend_date': 'mm/dd/yyyy',
+                                    'attend_timein': attendTimein,
+                                    'attend_timeout': attendTimeout,
+                                    'attend_status': attendStatus,
+                                    'attend_shiftfrom': attendShiftfrom,
+                                    'attend_shiftto': attendShiftto,
+                                }]
 
                         else:
 
                             messages.info(request, "No records found for employee ID " + str(empID))
                             context["employeesearch"] = [{
                                 'id': '',
-                                'emp_id': str(empID),
+                                'emp_id': empID,
                                 'attend_date': '',
                                 'attend_timein': '',
                                 'attend_timeout': '',
@@ -191,7 +201,7 @@ def module(request, category):
                                     messages.info(request, "Employee ID " + str(empID) + " not attended on date " + str(attendDate))
                                     context["employeesearch"] = [{
                                         'id': '',
-                                        'emp_id': str(empID),
+                                        'emp_id': empID,
                                         'attend_date': attendDate,
                                         'attend_timein': '',
                                         'attend_timeout': '',
@@ -205,7 +215,7 @@ def module(request, category):
                                 messages.info(request, "Please choose Attendance date.")
                                 context["employeesearch"] = [{
                                     'id': '',
-                                    'emp_id': str(empID),
+                                    'emp_id': empID,
                                     'attend_date': 'mm/dd/yyyy',
                                     'attend_timein': '',
                                     'attend_timeout': '',
@@ -219,7 +229,7 @@ def module(request, category):
                             messages.info(request, "No records found for employee ID " + str(empID))
                             context["employeesearch"] = [{
                                 'id': '',
-                                'emp_id': str(empID),
+                                'emp_id': empID,
                                 'attend_date': '',
                                 'attend_timein': '',
                                 'attend_timeout': '',
@@ -233,7 +243,7 @@ def module(request, category):
                     messages.info(request, "ID should be numeric.")
                     context["employeesearch"] = [{
                         'id': '',
-                        'emp_id': str(empID),
+                        'emp_id': empID,
                         'attend_date': '',
                         'attend_timein': '',
                         'attend_timeout': '',
@@ -260,16 +270,10 @@ def module(request, category):
             'emp_remarks': '',
         }]
 
-        context = {
-            'selections': Selection.objects.all(),
-            'parameters': Parameter.objects.all(),
-            'modules': Module.objects.all(),
-            'sections': Section.objects.all(),
-            'employees': Employee.objects.all(),
-            'filters': Filter.objects.all(),
-            'templates': Template.objects.all(),
-            'employeesearch': employeeSearch,
-        }
+        if "employees" not in context: context["employees"] = Employee.objects.all()
+        if "filters" not in context: context["filters"] = Filter.objects.all()
+        if "templates" not in context: context["templates"] = Template.objects.all()
+        if "employeesearch" not in context: context["employeesearch"] = employeeSearch
 
         if request.method == 'POST':
 
@@ -359,7 +363,7 @@ def module(request, category):
                             messages.info(request, "No records found for employee ID " + str(empID))
                             context["employeesearch"] = [{
                                 'id': '',
-                                'emp_id': str(empID), 
+                                'emp_id': empID, 
                                 'emp_name': '',
                                 'emp_position': '',
                                 'emp_shift': '',
@@ -372,7 +376,7 @@ def module(request, category):
                     messages.info(request, "ID should be numeric.")
                     context["employeesearch"] = [{
                         'id': '',
-                        'emp_id': str(empID), 
+                        'emp_id': empID, 
                         'emp_name': '',
                         'emp_position': '',
                         'emp_shift': '',
@@ -382,8 +386,8 @@ def module(request, category):
 
         return render(request,"ams/module/assignshift.html", context)
     
-    elif category == "trackserialedpart":
-        return render(request,"ams/module/trackserialedpart.html", context)
+    elif category == "roadcall":
+        return render(request,"ams/module/roadcall.html", context)
     
     elif category == "outofservice":
         return render(request,"ams/module/outofservice.html", context)
@@ -409,5 +413,138 @@ def module(request, category):
     elif category == "addstock":
         return render(request,"ams/module/addstock.html", context)
     
-    elif category == "assets":
-        return render(request,"ams/module/assets.html", context)
+    elif category == "fleet":
+
+        asset_list = Asset.objects.all().order_by('asset_id')
+        page = request.GET.get('page', 1)
+        paginator = Paginator(asset_list, 15)
+
+        try:
+            assetlists = paginator.page(page)
+        except PageNotAnInteger:
+            assetlists = paginator.page(1)
+        except EmptyPage:
+            assetlists = paginator.page(paginator.num_pages)
+
+        assetSearch = [{
+            'id': '',
+            'asset_id': '',
+            'asset_model': '',
+            'asset_type': '',
+            'asset_sector': '',
+            'asset_area': '',
+            'asset_serial': '',
+            'asset_desc': '',
+        }]
+
+        if "assetlists" not in context: context["assetlists"] = assetlists
+        if "assetsearch" not in context: context["assetsearch"] = assetSearch
+
+        if request.method == 'POST':
+
+            if "assetsearch" in context: del context["assetsearch"]
+
+            if request.POST.get("clear-button"):
+                
+                context["assetsearch"] = assetSearch
+            
+            elif request.POST.get("update-from-cell-button"):
+
+                assetID = request.POST.get('cell-asset-id')
+                updateAsset = Asset.objects.filter(asset_id__exact = assetID)
+
+                messages.info(request, "Records found for asset ID " + assetID)
+                context["assetsearch"] = updateAsset
+
+            else:
+                
+                assetID = request.POST['asset-id']
+
+                if assetID != "":
+
+                    assetExist = Asset.objects.filter(asset_id = assetID).values()
+
+                    if request.POST.get("save-button"):
+
+                        assetModel = request.POST['asset-Model-input']
+                        assetType = request.POST['asset-Type-input']
+                        assetSector = request.POST['asset-Sector-input']
+                        assetArea = request.POST['asset-Area-input']
+                        assetSerial = request.POST['asset-serial-input']
+                        assetDesc = request.POST['asset-desc-input']
+                        
+                        if assetExist:
+
+                            assetExist.update(
+                                asset_model = assetModel,
+                                asset_type = assetType,
+                                asset_sector = assetSector,
+                                asset_area = assetArea,
+                                asset_serial = assetSerial,
+                                asset_desc = assetDesc,
+                            )
+                            
+                            messages.info(request, "Asset ID " + assetID + " successfully updated.")
+                            
+                        else:
+
+                            info = Asset(
+                                asset_id = assetID,
+                                asset_model = assetModel,
+                                asset_type = assetType,
+                                asset_sector = assetSector,
+                                asset_area = assetArea,
+                                asset_serial = assetSerial,
+                                asset_desc = assetDesc,
+                            )
+                            
+                            info.save()
+                            messages.info(request, "Asset ID " + assetID + " successfully saved.")
+                            
+                        context["assetsearch"] = [{
+                            'id': '',
+                            'asset_id': assetID, 
+                            'asset_model': assetModel,
+                            'asset_type': assetType,
+                            'asset_sector': assetSector,
+                            'asset_area': assetArea,
+                            'asset_serial': assetSerial,
+                            'asset_desc': assetDesc,
+                        }]
+                        
+                    elif request.POST.get("search-button"):
+                        
+                        if assetExist:
+                            
+                            messages.info(request, "Records found for asset ID " + assetID)
+                            context["assetsearch"] = assetExist
+                            
+                        else:
+                            
+                            messages.info(request, "No records found for asset ID " + assetID)
+                            context["assetsearch"] = [{
+                                'id': '',
+                                'asset_id': assetID, 
+                                'asset_model': '',
+                                'asset_type': '',
+                                'asset_sector': '',
+                                'asset_area': '',
+                                'asset_serial': '',
+                                'asset_desc': '',
+                            }]
+
+                else:
+
+                    messages.info(request, "ID should not be empty.")
+                    context["assetsearch"] = [{
+                        'id': '',
+                        'asset_id': assetID, 
+                        'asset_model': '',
+                        'asset_type': '',
+                        'asset_sector': '',
+                        'asset_area': '',
+                        'asset_serial': '',
+                        'asset_desc': '',
+                     }]
+
+        return render(request,"ams/module/fleet.html", context)

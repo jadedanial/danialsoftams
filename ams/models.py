@@ -108,3 +108,16 @@ class Order(models.Model):
 
     def __str__(self):
         return self.req_asset
+
+class Asset(models.Model):
+
+    asset_id = models.CharField(max_length = 10, blank = False, null = False, verbose_name = 'Asset Number')
+    asset_model = models.CharField(max_length = 50, blank = False, null = False, verbose_name = 'Model')
+    asset_type = models.CharField(max_length = 100, blank = False, null = False, verbose_name = 'Type')
+    asset_sector = models.CharField(max_length = 50, blank = False, null = False, verbose_name = 'Sector')
+    asset_area = models.CharField(max_length = 50, blank = False, null = False, verbose_name = 'Area')
+    asset_serial = models.CharField(max_length = 300, blank = False, null = False, verbose_name = 'Serial')
+    asset_desc = models.TextField(blank = True, null = True, verbose_name = 'Description')
+
+    def __str__(self):
+        return str(self.asset_id)

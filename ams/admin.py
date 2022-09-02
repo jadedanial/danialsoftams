@@ -71,6 +71,13 @@ class OrderAdmin(admin.ModelAdmin):
 	list_filter = ('id', 'order_code',)
 	search_fields = ('id', 'order_code',)
 
+class AssetAdmin(admin.ModelAdmin):
+
+	readonly_fields = ('id',)
+	list_display = ('asset_id', 'asset_model', 'asset_type', 'asset_sector', 'asset_area', 'asset_serial', 'asset_desc',)
+	list_filter = ('asset_id', 'asset_model', 'asset_type', 'asset_sector', 'asset_area', 'asset_serial', 'asset_desc',)
+	search_fields = ('asset_id', 'asset_model', 'asset_type', 'asset_sector', 'asset_area', 'asset_serial', 'asset_desc',)
+
 admin.site.register(Selection, SelectionAdmin)
 admin.site.register(Parameter, ParameterAdmin)
 admin.site.register(Module, ModuleAdmin)
@@ -81,3 +88,4 @@ admin.site.register(Filter, FilterAdmin)
 admin.site.register(Template, TemplateAdmin)
 admin.site.register(Attendance, AttendanceAdmin)
 admin.site.register(Order, OrderAdmin)
+admin.site.register(Asset, AssetAdmin)

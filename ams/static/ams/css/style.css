@@ -411,6 +411,7 @@ form{
 .input-box-big{
     font-family: ralewaymedium;
     font-size: 18px;
+    font-weight: 600;
     color: #332042;
     background: #ffffff;
     display: block;
@@ -425,6 +426,7 @@ form{
 }
 
 .input-box-big::placeholder, .borderless-input::placeholder{
+    font-weight: 500;
     color: #55247a54;
 }
 
@@ -593,6 +595,7 @@ select option{
     border-top: none;
     width: 100%;
     margin-bottom: 30px;
+    cursor: pointer;
 }
 
 .search-result-table thead tr td{

@@ -36,6 +36,7 @@
                                             <label class="inner-input-label" id="employee-name-label" title="Employee Name" onclick="changeFocus('', 'employee-name-input', '', '', '')">Name</label>
                                             <input type="text" value="{{ e.emp_name }}" class="borderless-input" id="employee-name-input" name="employee-name-input" title="Employee Name" placeholder="" onfocus="(this.type='text')" onchange="showLabel('employee-name-label', 'employee-name-input', 'employee-name-clear', '', '')" tabindex="3" required>
                                             <button type="button" class="clear-input-button" id="employee-name-clear" onclick="emptyInput('employee-name-label', 'employee-name-input', 'employee-name-clear', '')"><i class="fa fa-times"></i></button>
+                                            <script>showLabel('employee-name-label', 'employee-name-input', 'employee-name-clear', '', '')</script>
                                         {% endfor %}
                                     </div>
                                 </div>
@@ -69,6 +70,7 @@
                                                         {% endfor %}
                                                     </select>
                                                     <button type="button" class="clear-input-button" id="employee-{{ parameter.param_name }}-clear" onclick="emptyInput('employee-{{ parameter.param_name }}-label', 'employee-{{ parameter.param_name }}-input', 'employee-{{ parameter.param_name }}-clear', '')"><i class="fa fa-times"></i></button>
+                                                    <script>showLabel('employee-{{ parameter.param_name }}-label', 'employee-{{ parameter.param_name }}-input', 'employee-{{ parameter.param_name }}-clear', '', '')</script>
                                                 </div>
                                             </div>
                                         {% endfor %}
@@ -82,6 +84,7 @@
                                             <label class="inner-input-label" id="employee-remarks-label" title="Remarks" onclick="changeFocus('', 'employee-remarks-input', '', '', '')">Remarks</label>
                                             <input type="text" value="{{ e.emp_remarks }}" class="borderless-input" id="employee-remarks-input" name="employee-remarks-input" title="Remarks" placeholder="" onfocus="(this.type='text')" onchange="showLabel('employee-remarks-label', 'employee-remarks-input', 'employee-remarks-clear', '', '')" tabindex="5">
                                             <button type="button" class="clear-input-button" id="employee-remarks-clear" onclick="emptyInput('employee-remarks-label', 'employee-remarks-input', 'employee-remarks-clear', '')"><i class="fa fa-times"></i></button>
+                                            <script>showLabel('employee-remarks-label', 'employee-remarks-input', 'employee-remarks-clear', '', '')</script>
                                         {% endfor %}
                                     </div>
                                 </div>
@@ -96,20 +99,8 @@
                                         <p class="action-message" id="saved-message">{{ message }}</p>
                                         <script>
                                             var message = document.getElementById("saved-message");
-                                            var lb = document.getElementsByClassName("inner-input-label");
-                                            var ip = document.getElementsByClassName("advance-search-select");
-                                            var cb = document.getElementsByClassName("clear-input-button");
-                                            if(message.innerHTML.includes("Records found for employee ID") || message.innerHTML.includes("successfully")){
+                                            if(message.innerHTML.includes("Records found for") || message.innerHTML.includes("successfully")){
                                                 message.style.color = "#a676f1";
-                                                for(a = 0; a < lb.length; a++){
-                                                    lb[a].style.color = "#a676f1";
-                                                }
-                                                for(b = 0; b < ip.length; b++){
-                                                    ip[b].classList.add("advance-search-select-hide-arrow");
-                                                }
-                                                for(c = 0; c < cb.length; c++){
-                                                    cb[c].style.display = "block";
-                                                }
                                             }else{
                                                 message.style.color = "#703606";
                                             }

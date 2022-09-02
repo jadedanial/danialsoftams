@@ -52,6 +52,7 @@
                                             <label class="inner-input-label" id="attendance-time-in-label" title="Time In" onclick="changeFocus('', 'attendance-time-in-input', '', '', '')">Time In</label>
                                             <input type="text" value="{{ e.attend_timein }}" class="borderless-input" id="attendance-time-in-input" name="attendance-time-in-input" title="Time In" placeholder="" onfocus="(this.type='time')" onblur="(this.type='text')" onchange="showLabel('attendance-time-in-label', 'attendance-time-in-input', 'attendance-time-in-clear', '', '')" tabindex="4" required>
                                             <button type="button" class="clear-input-button" id="attendance-time-in-clear" onclick="emptyInput('attendance-time-in-label', 'attendance-time-in-input', 'attendance-time-in-clear', '')"><i class="fa fa-times"></i></button>
+                                            <script>showLabel('attendance-time-in-label', 'attendance-time-in-input', 'attendance-time-in-clear', '', '')</script>
                                         {% endfor %}
                                     </div>
                                 </div>
@@ -61,6 +62,7 @@
                                             <label class="inner-input-label" id="attendance-time-out-label" title="Time Out" onclick="changeFocus('', 'attendance-time-out-input', '', '', '')">Time Out</label>
                                             <input type="text" value="{{ e.attend_timeout }}" class="borderless-input" id="attendance-time-out-input" name="attendance-time-out-input" title="Time Out" placeholder="" onfocus="(this.type='time')" onblur="(this.type='text')" onchange="showLabel('attendance-time-out-label', 'attendance-time-out-input', 'attendance-time-out-clear', '', '')" tabindex="5" required>
                                             <button type="button" class="clear-input-button" id="attendance-time-out-clear" onclick="emptyInput('attendance-time-out-label', 'attendance-time-out-input', 'attendance-time-out-clear', '')"><i class="fa fa-times"></i></button>
+                                            <script>showLabel('attendance-time-out-label', 'attendance-time-out-input', 'attendance-time-out-clear', '', '')</script>
                                         {% endfor %}
                                     </div>
                                 </div>
@@ -84,6 +86,7 @@
                                                         {% endfor %}
                                                     </select>
                                                     <button type="button" class="clear-input-button" id="{{ parameter.param_name }}-clear" onclick="emptyInput('{{ parameter.param_name }}-label', '{{ parameter.param_name }}-input', '{{ parameter.param_name }}-clear', '')"><i class="fa fa-times"></i></button>
+                                                    <script>showLabel('{{ parameter.param_name }}-label', '{{ parameter.param_name }}-input', '{{ parameter.param_name }}-clear', '', '')</script>
                                                 </div>
                                             </div>
                                         {% endfor %}
@@ -95,6 +98,7 @@
                                             <label class="inner-input-label" id="shift-from-label" title="Shift Time From" onclick="changeFocus('', 'shift-from-input', '', '', '')">Shift Time From</label>
                                             <input type="text" value="{{ e.attend_shiftfrom }}" class="borderless-input" id="shift-from-input" name="shift-from-input" title="Shift Time From" placeholder="" onfocus="(this.type='time')" onblur="(this.type='text')" onchange="showLabel('shift-from-label', 'shift-from-input', 'shift-from-clear', '', '')" tabindex="7" required>
                                             <button type="button" class="clear-input-button" id="shift-from-clear" onclick="emptyInput('shift-from-label', 'shift-from-input', 'shift-from-clear', '')"><i class="fa fa-times"></i></button>
+                                            <script>showLabel('shift-from-label', 'shift-from-input', 'shift-from-clear', '', '')</script>
                                         {% endfor %}
                                     </div>
                                 </div>
@@ -104,6 +108,7 @@
                                             <label class="inner-input-label" id="shift-to-label" title="Shift Time To" onclick="changeFocus('', 'shift-to-input', '', '', '')">Shift Time To</label>
                                             <input type="text" value="{{ e.attend_shiftto }}" class="borderless-input" id="shift-to-input" name="shift-to-input" title="Shift Time To" placeholder="" onfocus="(this.type='time')" onblur="(this.type='text')" onchange="showLabel('shift-to-label', 'shift-to-input', 'shift-to-clear', '', '')" tabindex="8" required>
                                             <button type="button" class="clear-input-button" id="shift-to-clear" onclick="emptyInput('shift-to-label', 'shift-to-input', 'shift-to-clear', '')"><i class="fa fa-times"></i></button>
+                                            <script>showLabel('shift-to-label', 'shift-to-input', 'shift-to-clear', '', '')</script>
                                         {% endfor %}
                                     </div>
                                 </div>
@@ -119,20 +124,8 @@
                                     <p class="action-message" id="saved-message">{{ message }}</p>
                                     <script>
                                         var message = document.getElementById("saved-message");
-                                        var lb = document.getElementsByClassName("inner-input-label");
-                                        var ip = document.getElementsByClassName("advance-search-select");
-                                        var cb = document.getElementsByClassName("clear-input-button");
-                                        if(message.innerHTML.includes("Records found for employee ID") || message.innerHTML.includes("successfully")){
+                                        if(message.innerHTML.includes("Records found for") || message.innerHTML.includes("successfully")){
                                             message.style.color = "#a676f1";
-                                            for(a = 0; a < lb.length; a++){
-                                                lb[a].style.color = "#a676f1";
-                                            }
-                                            for(b = 0; b < ip.length; b++){
-                                                ip[b].classList.add("advance-search-select-hide-arrow");
-                                            }
-                                            for(c = 0; c < cb.length; c++){
-                                                cb[c].style.display = "block";
-                                            }
                                         }else{
                                             message.style.color = "#703606";
                                         }
