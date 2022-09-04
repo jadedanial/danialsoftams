@@ -487,6 +487,14 @@ form{
     margin-top: 40px;
 }
 
+.advance-search-desc-row-wrap{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0;
+}
+
 .search-form form .search-inner-form .advance-search .search-input-field-four{
     width: calc((100% - 40px) / 4);
     margin: 6px 0;

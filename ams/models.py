@@ -111,7 +111,7 @@ class Order(models.Model):
 
 class Asset(models.Model):
 
-    asset_id = models.CharField(max_length = 10, blank = False, null = False, verbose_name = 'Asset Number')
+    asset_id = models.CharField(max_length = 10, blank = False, null = False, verbose_name = 'Asset ID')
     asset_model = models.CharField(max_length = 50, blank = False, null = False, verbose_name = 'Model')
     asset_type = models.CharField(max_length = 100, blank = False, null = False, verbose_name = 'Type')
     asset_sector = models.CharField(max_length = 50, blank = False, null = False, verbose_name = 'Sector')
@@ -120,4 +120,22 @@ class Asset(models.Model):
     asset_desc = models.TextField(blank = True, null = True, verbose_name = 'Description')
 
     def __str__(self):
-        return str(self.asset_id)
+        return self.asset_id
+
+class Roadcall(models.Model):
+
+    asset_id = models.ForeignKey(Asset, on_delete = models.CASCADE, blank = False, null = False, verbose_name = 'Asset ID')
+    rc_date = models.CharField(max_length = 100, blank = False, null = False, verbose_name = 'Road Call Date')
+    rc_exitdate = models.CharField(max_length = 100, blank = False, null = False, verbose_name = 'Finished Date')
+    rc_loc = models.CharField(max_length = 300, blank = False, null = False, verbose_name = 'Location')
+    rc_reploc = models.CharField(max_length = 300, blank = False, null = False, verbose_name = 'Reported Workshop')
+    emp_id = models.ForeignKey(Employee, on_delete = models.CASCADE, blank = False, null = False, verbose_name = 'Technician ID')
+    rc_mobilews = models.CharField(max_length = 100, blank = False, null = False, verbose_name = 'Mobile Workshop')
+    rc_deftype = models.CharField(max_length = 300, blank = False, null = False, verbose_name = 'Defect Type')
+    rc_failure = models.CharField(max_length = 300, blank = False, null = False, verbose_name = 'Failure')
+    rc_actdef = models.TextField(blank = False, null = False, verbose_name = 'Actual Defect')
+    rc_repair = models.TextField(blank = False, null = False, verbose_name = 'Repair Action')
+    rc_parts = models.TextField(blank = False, null = False, verbose_name = 'Spare Part')
+
+    def __str__(self):
+        return self.asset_id

@@ -78,6 +78,13 @@ class AssetAdmin(admin.ModelAdmin):
 	list_filter = ('asset_id', 'asset_model', 'asset_type', 'asset_sector', 'asset_area', 'asset_serial', 'asset_desc',)
 	search_fields = ('asset_id', 'asset_model', 'asset_type', 'asset_sector', 'asset_area', 'asset_serial', 'asset_desc',)
 
+class RoadcallAdmin(admin.ModelAdmin):
+
+	readonly_fields = ('id',)
+	list_display = ('asset_id', 'rc_date', 'rc_exitdate', 'rc_loc', 'rc_reploc', 'emp_id', 'rc_mobilews', 'rc_deftype', 'rc_failure', 'rc_actdef', 'rc_repair', 'rc_parts',)
+	list_display = ('asset_id', 'rc_date', 'rc_exitdate', 'rc_loc', 'rc_reploc', 'emp_id', 'rc_mobilews', 'rc_deftype', 'rc_failure', 'rc_actdef', 'rc_repair', 'rc_parts',)
+	list_display = ('asset_id', 'rc_date', 'rc_exitdate', 'rc_loc', 'rc_reploc', 'emp_id', 'rc_mobilews', 'rc_deftype', 'rc_failure', 'rc_actdef', 'rc_repair', 'rc_parts',)
+
 admin.site.register(Selection, SelectionAdmin)
 admin.site.register(Parameter, ParameterAdmin)
 admin.site.register(Module, ModuleAdmin)
@@ -89,3 +96,4 @@ admin.site.register(Template, TemplateAdmin)
 admin.site.register(Attendance, AttendanceAdmin)
 admin.site.register(Order, OrderAdmin)
 admin.site.register(Asset, AssetAdmin)
+admin.site.register(Roadcall, RoadcallAdmin)

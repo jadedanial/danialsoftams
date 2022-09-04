@@ -113,25 +113,25 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="advance-search-desc-row-last">
-                            <div class="group-btn">
-                                <button type="submit" value="save-employee-shift" class="regular-btn" id="save-button" name="save-button" title="Save" tabindex="9">SAVE</button>
-                                <button type="submit" value="clear-employee-shift" class="regular-btn" id="clear-button" name="clear-button" title="Clear fields" formnovalidate="formnovalidate" tabindex="10">CLEAR</button>
+                            <div class="advance-search-desc-row-last">
+                                <div class="group-btn">
+                                    <button type="submit" value="save-employee-shift" class="regular-btn" id="save-button" name="save-button" title="Save" tabindex="9">SAVE</button>
+                                    <button type="submit" value="clear-employee-shift" class="regular-btn" id="clear-button" name="clear-button" title="Clear fields" formnovalidate="formnovalidate" tabindex="10">CLEAR</button>
+                                </div>
+                                {% if messages %}
+                                    {% for message in messages %}
+                                        <p class="action-message" id="saved-message">{{ message }}</p>
+                                        <script>
+                                            var message = document.getElementById("saved-message");
+                                            if(message.innerHTML.includes("Records found for") || message.innerHTML.includes("successfully")){
+                                                message.style.color = "#a676f1";
+                                            }else{
+                                                message.style.color = "#703606";
+                                            }
+                                        </script>
+                                    {% endfor %}
+                                {% endif %}
                             </div>
-                            {% if messages %}
-                                {% for message in messages %}
-                                    <p class="action-message" id="saved-message">{{ message }}</p>
-                                    <script>
-                                        var message = document.getElementById("saved-message");
-                                        if(message.innerHTML.includes("Records found for") || message.innerHTML.includes("successfully")){
-                                            message.style.color = "#a676f1";
-                                        }else{
-                                            message.style.color = "#703606";
-                                        }
-                                    </script>
-                                {% endfor %}
-                            {% endif %}
                         </div>
                     </div>
                 </div>
