@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block modulecontent %}
+{% load render_table from django_tables2 %}
+{% load querystring from django_tables2 %}
+{% load static %}
+{% load widget_tweaks %}
+    {% for m in mod %}
+        <form method="POST" class="create-object" id="create-object">
+        {% csrf_token %}
+            <div class="fields-container">
+                <div class="create-inner-form">
+                    <div class="basic-form">
+                        <div class="custom-input-field">{% render_field form.object_id %}</div>
+                        <div class="center-align"><button class="icon-btn" id="filter-button" name="filter-button" value="filter-button" type="button" data-bs-toggle="modal" data-bs-target="#exampleModalCenter"><i class="fa fa-search"></i></button></div>
+                    </div> 
+                </div>
+            </div>
+            {% for fieldgroup in fieldgroups %}
+                <div class="fields-container">
+                    <span class="field-group">{{ fieldgroup.name }}&nbsp;&nbsp;&nbsp;<label class="switch" data-bs-toggle="collapse" data-bs-target="#{{ fieldgroup.id }}"><input type="checkbox"><div></div></label></span>
+                    <div id="{{ fieldgroup.id }}" class="collapse show">
+                        <div class="advance-form-desc-row">
+                            {% for field in form %}
+                                {% for f in fieldgroup.fields %}
+                                    {% if field.name == f.field %}
+                                        <div class="p-2 flex-fill bd-highlight custom-field-outer">
+                                            <div class="custom-field-inner">
+                                                <label class="inner-input-label" id="{{ field.name }}_label" onclick="changeFocus('{{ field.name }}_input')">{{ field.label }}</label>
+                                                {% render_field field %}
+                                                <button type="button" class="clear-input-button" id="{{ field.name }}_clear" onclick="emptyInput('{{ field.name }}_label', '{{ field.name }}_input', '{{ field.name }}_clear')"><i class="fa fa-times"></i></button>
+                                            </div>
+                                        </div>
+                                        <script>fieldID = document.getElementById("{{ field.name }}_input");</script>
+                                        {% if f.value != '' %}
+                                            <script>fieldID.value = "{{ f.value }}";</script>
+                                        {% endif %}
+                                        {% if field.name == 'req_id' %}
+                                            {% for r in request_id %}
+                                                <script>fieldID.value = "{{ r.requestID }}";</script>
+                                            {% endfor %}
+                                        {% endif %}
+                                        <script>showLabel('{{ field.name }}_label', '{{ field.name }}_input', '{{ field.name }}_clear', '');</script>
+                                        {% if f.readonly == 'yes' %}
+                                            <script>
+                                                fieldID.readOnly = true;
+                                                document.getElementById("{{ field.name }}_clear").style.display = "none"
+                                            </script>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            <div class="fields-container no-shadow bottom-padding">
+                <div class="advance-form-desc-row-last">
+                    <div class="p-2 group-btn">
+                        <div><button class="regular-btn" id="save-button" name="save-button" value="save-button" type="submit" style="margin-right: 8px;">SAVE</button></div>
+                        {% if m.mod_url == 'workrequest' %}
+                            <a class="link-btn" href="{% url 'mod_create' category=m.mod_url %}" style="margin-right: 8px;">APPROVE</a>
+                        {% endif %}
+                        <a class="link-btn" href="{% url 'mod_create' category=m.mod_url %}" style="margin-right: 8px;">NEW</a>
+                        <a class="link-btn" href="{% url 'mod_view' category=m.mod_url %}">SEARCH</a>
+                    </div>
+                    {% for m in form_message %}
+                        <p class="action-message" id="saved-message">{{ m.message }}</p>
+                        <script>
+                            var message = document.getElementById("saved-message");
+                            if(message.innerHTML.includes("successfully")){
+                                message.style.color = "#a676f1";
+                            }else{
+                                message.style.color = "#703606";
+                            }
+                        </script>
+                    {% endfor %}
+                </div>
+            </div>
+            <!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="data-table">
+                {% render_table table %}
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+        </form>
+    {% endfor %}
+    <style>.module-container{display: block;}</style>
+{% endblock %}

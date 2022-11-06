@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block modulecontent %}
+{% load render_table from django_tables2 %}
+{% load querystring from django_tables2 %}
+{% load static %}
+{% load widget_tweaks %}
+    {% for m in mod %}
+        {% for module in modules %}
+            {% if module.mod_url == m.mod_url %}
+                <div class="module-header">
+                    <p>{{ module.mod_name }}</p>
+                </div>
+            {% endif %}
+        {% endfor %}
+        <div class="fields-container">
+            <div class="table-options">
+                <form method="GET" class="filter-object" id="filter-object">
+                {% csrf_token %}
+                    {% if filter %}
+                        <div class="filter-options">
+                            <div class="custom-dropdown">
+                                <button class="icon-text-btn dropdown-button" type="button" tabindex="10" onclick="toggleFilter('dropdown-content')"><i class="fa-solid fa-list-check"></i><p>FILTER BY</p></button>
+                                <div id="dropdown-content" style="display: none;" tabindex="11" onblur="hideElement('dropdown-content')">
+                                    <a onclick="changeFilter('clear_filter', 'dropdown-content')">Clear Filter</a>
+                                    {% for field in fields %}
+                                        {% for key, value in field.items %}
+                                            <a onclick="changeFilter('{{ key }}', 'dropdown-content')">{{ value }}</a>
+                                        {% endfor %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="custom-field-inner">
+                                {% for field in filter.form %}
+                                    {% render_field field %}
+                                {% endfor %}
+                                <script>checkCurrentFilter('filter-field')</script>
+                                <div>
+                                    <button class="icon-btn" id="filter-button" name="filter-button" value="filter-button" type="submit"><i class="fa fa-search"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </form>
+                <a class="link-btn" href="{% url 'mod_create' category=m.mod_url %}" style="margin: 0 8px;">NEW</a>
+                <a class="link-btn" href="{% querystring '_export'='xlsx' %}">EXPORT</a>
+            </div>
+            <div class="data-table">
+                {% render_table table %}
+            </div>
+        </div>
+    {% endfor %}
+    <style>.module-container{display: block;}</style>
+{% endblock %}

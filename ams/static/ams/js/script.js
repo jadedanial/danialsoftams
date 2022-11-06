@@ -1,75 +1,130 @@
+//Reset form
+function resetForm(formID){
+
+    var f = document.getElementById(formID);
+    f.reset();
+
+    var p = document.getElementsByClassName("primary-input");
+    var i = document.getElementsByClassName("input-field");
+    var l = document.getElementsByClassName("inner-input-label");
+    var b = document.getElementsByClassName("clear-input-button");
+    var m = document.getElementById("saved-message");
+
+    for(var w = 0; w < p.length; w++){
+        p[w].focus();
+    }
+    
+    for(var x = 0; x < i.length; x++){
+        i[x].value = "";
+    }
+    
+    for(var y = 0; y < l.length; y++){
+        l[y].style.color = "#55247a54";
+    }
+
+    for(var z = 0; z < b.length; z++){
+        b[z].style.display = "none";
+    }
+
+    if(m.innerHTML != ""){
+        m.innerHTML = "";
+    }
+
+}
+
 //Empty input
-function emptyInput(label, input, button, status){
+function emptyInput(label, input, button){
 
     document.getElementById(input).value = "";
-    document.getElementById(button).style.display = "none"
-
-    if(status == "normal"){
-        document.getElementById(label).style.color = "#a676f1";
-    }else{
-        document.getElementById(label).style.color = "#55247a54";
-    }
-
-    var i = document.getElementById(input);
-
-    if(i.tagName === "SELECT"){
-        i.classList.remove("advance-search-select-hide-arrow");
-    }
+    document.getElementById(button).style.display = "none";
+    document.getElementById(label).style.color = "#55247a54";
 
 }
 
 //Change focus
-function changeFocus(label, input, element, string){
+function changeFocus(input){
 
     var i = document.getElementById(input);
     i.focus();
 
-    if(string != ""){
-        var m = document.getElementById(label);
-        var n = document.getElementById(element);
-        if(n.tagName.toLowerCase() === "select"){
-            var text= n.options[n.selectedIndex].text;
-            m.innerHTML = string + text;
+}
+
+//Change filter field
+function changeFilter(field, dropdown){
+
+    toggleFilter(dropdown);
+
+    var filter = document.getElementsByClassName("filter-field");
+    var f = document.getElementById(field);
+
+    for(var x = 0; x < filter.length; x++){
+        filter[x].value = "";
+        filter[x].classList.add("hide-filter");
+        filter[x].removeAttribute("required");
+    }
+
+    if(f){
+        f.classList.remove("hide-filter");
+        f.setAttribute("required", "true");
+        f.focus();
+    }
+
+}
+
+//Toggle filter
+function toggleFilter(dropdown){
+
+    var d = document.getElementById(dropdown);
+
+    if(d.style.display === "none"){
+        d.style.display = "block";
+        d.focus();
+    }else{
+        d.style.display = "none";
+    }
+
+}
+
+//Check current filter field to show
+function checkCurrentFilter(field){
+
+    var f = document.getElementsByClassName(field);
+
+    for(var x = 0; x < f.length; x++){
+        if(f[x].value == ""){
+            f[x].classList.add("hide-filter");
+        }else{
+            f[x].classList.remove("hide-filter");
+            f[x].setAttribute("required", "true");
         }
     }
 
 }
 
+//Hide element
+function hideElement(element){
+
+    var e = document.getElementById(element);
+    e.style.display = "none";
+
+}
+
 //Show label
-function showLabel(label, input, button, elementID, status){
+function showLabel(label, input, button){
 
     var i = document.getElementById(input);
 
     if(i.value != ""){
-        if(i.tagName.toLowerCase() === "select"){
-            if(elementID == "Employee Shift Group"){
-                for(var x = 0; x < i.length; x++){
-                    var tableShow = document.getElementsByClassName(i[x].innerHTML);
-                    for(var y = 0; y < tableShow.length; y++){
-                        tableShow[y].style.display = "";
-                    }
-                    if(i.value != "Show All"){
-                        if(i.value != i[x].innerHTML){
-                            for(var z = 0; z < tableShow.length; z++){
-                                tableShow[z].style.display = "none";
-                            }
-                        }
-                    }
-                }
-            }
-        }
         document.getElementById(label).style.color = "#a676f1";
         document.getElementById(button).style.display = "block";
     }else{
-        if(status == ""){
-            document.getElementById(label).style.color = "#55247a54";
-            document.getElementById(button).style.display = "none";
-        }
+        document.getElementById(label).style.color = "#55247a54";
+        document.getElementById(button).style.display = "none";
     }
 
     document.getElementById(input).type = "text";
     document.getElementById(input).style.color = "#000000";
-    document.getElementById(input).classList.add("advance-search-select-hide-arrow");
+
 }
 
 //Filter table
@@ -100,7 +155,7 @@ function showMenu(m){
 
     if(m == 1){
 
-        document.getElementById("chevron-menu").style.display = "none";
+        document.getElementById("burger-menu").style.display = "none";
         document.getElementById("app-logo").style.display = "inline-flex";
         document.getElementById("menu-home").style.display = "block";
         document.getElementById("menu-maintenance").style.display = "none";
@@ -109,9 +164,8 @@ function showMenu(m){
         document.getElementById("menu-inventory").style.display = "none";
         document.getElementById("menu-assets").style.display = "none";
         document.body.classList.add('active');
-        document.getElementById("chevleft").className = "fas fa-chevron-right";
 
-    }else if(m == 2){
+    }else if(m == "MAINTENANCE"){
 
         document.getElementById("menu-maintenance").style.display = "block";
         document.getElementById("menu-administration").style.display = "none";
@@ -119,7 +173,7 @@ function showMenu(m){
         document.getElementById("menu-inventory").style.display = "none";
         document.getElementById("menu-assets").style.display = "none";
 
-    }else if(m == 3){
+    }else if(m == "ADMINISTRATION"){
 
         document.getElementById("menu-maintenance").style.display = "none";
         document.getElementById("menu-administration").style.display = "block";
@@ -127,7 +181,7 @@ function showMenu(m){
         document.getElementById("menu-inventory").style.display = "none";
         document.getElementById("menu-assets").style.display = "none";
 
-    }else if(m == 4){
+    }else if(m == "REPORTS"){
 
         document.getElementById("menu-maintenance").style.display = "none";
         document.getElementById("menu-administration").style.display = "none";
@@ -135,7 +189,7 @@ function showMenu(m){
         document.getElementById("menu-inventory").style.display = "none"; 
         document.getElementById("menu-assets").style.display = "none";   
 
-    }else if(m == 5){
+    }else if(m == "INVENTORY"){
 
         document.getElementById("menu-maintenance").style.display = "none";
         document.getElementById("menu-administration").style.display = "none";
@@ -143,7 +197,7 @@ function showMenu(m){
         document.getElementById("menu-inventory").style.display = "block";
         document.getElementById("menu-assets").style.display = "none";
 
-    }else if(m == 6){
+    }else if(m == "ASSETS"){
 
         document.getElementById("menu-maintenance").style.display = "none";
         document.getElementById("menu-administration").style.display = "none";
@@ -168,17 +222,5 @@ function revealPassword(){
         x.type = "password";
         rev.className = "fa-solid fa-eye-slash";
     }
-
-}
-
-//Export to Excel file
-function exportToExcel(table){
-
-    TableToExcel.convert(document.getElementById(table), {
-        name: "Schedule.xlsx",
-        sheet: {
-            name: "Schedule"
-        }
-      });
 
 }
